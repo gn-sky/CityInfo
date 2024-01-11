@@ -10,7 +10,6 @@ namespace CityInfo.API.DbContexts
         public CityInfoContext(DbContextOptions<CityInfoContext> options)
             : base(options)
         {
-            //Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -73,10 +72,5 @@ namespace CityInfo.API.DbContexts
                     );
             base.OnModelCreating(modelBuilder);
         }
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlite("connectionstring");
-        //    base.OnConfiguring(optionsBuilder);
-        //}
     }
 }
