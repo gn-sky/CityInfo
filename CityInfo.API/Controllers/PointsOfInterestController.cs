@@ -75,6 +75,30 @@ namespace CityInfo.API.Controllers
                 createdPointOfInterestToReturn);
         }
 
+        [HttpPut("{pointOfInterestId}")]
+        public async Task<ActionResult<PointOfInterestDto>> UpdatePointOfInterest(
+                       int cityId,
+                       int pointOfInterestId,
+                       PointOfInterestForUpdateDto pointOfInterest)
+        {
+            if(!await _cityInfoRepository.CityExistsAsync(cityId))
+            {
+                return NotFound();
+            }
+
+            var pointOfInterestEntity = await _cityInfoRepository.GetPointOfInterestForCityAsync(cityId, pointOfInterestId);
+            if(pointOfInterestEntity == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(pointOfInterest, pointOfInterestEntity);
+
+            await _cityInfoRepository.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         [HttpPatch("{pointOfInterestId}")]
         public ActionResult PartiallyUpdatePointOfInterest(
             int cityId,
