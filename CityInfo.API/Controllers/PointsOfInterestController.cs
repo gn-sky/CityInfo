@@ -50,27 +50,29 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PointOfInterestDto> CreatePointOfInterest(int cityId, PointOfInterestForCreationDto pointOfInterest)
+        public async Task<ActionResult<PointOfInterestDto>> CreatePointOfInterest(int cityId, PointOfInterestForCreationDto pointOfInterest)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
-            if (city == null)
+            if (!await _cityInfoRepository.CityExistsAsync(cityId))
             {
                 return NotFound();
             }
-            // demo purposes - to be improved
-            var maxPointOfInterestId = CitiesDataStore.Current.Cities.SelectMany(c => c.PointsOfInterest).Max(p => p.Id);
-            var finalPointOfInterest = new PointOfInterestDto
-            {
-                Id = ++maxPointOfInterestId,
-                Name = pointOfInterest.Name,
-                Description = pointOfInterest.Description
-            };
-            city.PointsOfInterest.Add(finalPointOfInterest);
-            return CreatedAtAction(nameof(GetPointOfInterest), new { cityId, pointOfInterestId = finalPointOfInterest.Id }, finalPointOfInterest);
+            var finalPointOfInterest = _mapper.Map<Entities.PointOfInterest>(pointOfInterest);
+
+            await _cityInfoRepository.AddPointOfInterestForCityAsync(
+                cityId, finalPointOfInterest);
+            
+            await _cityInfoRepository.SaveChangesAsync();
+
+            var createdPointOfInterestToReturn =
+                _mapper.Map<PointOfInterestDto>(finalPointOfInterest);
+
+            return CreatedAtAction("GetPointOfInterest",
+                new
+                {
+                    cityId,
+                    pointOfInterestId = finalPointOfInterest.Id
+                },
+                createdPointOfInterestToReturn);
         }
 
         [HttpPatch("{pointOfInterestId}")]
