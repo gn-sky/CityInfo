@@ -8,7 +8,8 @@ using System.Text.Json;
 namespace CityInfo.API.Controllers
 {
     [ApiController]
-    [Authorize]
+    //temporarily commented out for testing purposes
+    //[Authorize]
     [Route("api/cities")]
     public class CitiesController : ControllerBase
     {
