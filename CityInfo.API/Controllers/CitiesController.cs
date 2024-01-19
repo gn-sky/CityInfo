@@ -55,7 +55,13 @@ namespace CityInfo.API.Controllers
         /// <param name="id">The id of the city to get</param>
         /// <param name="includepointsOfInterest">Whether or not to include the points of interest</param>
         /// <returns>An IActionResult</returns>
+        /// <response code="200">Returns the city</response>
+        /// <response code="404">If the city is not found</response>
+        /// <response code="400">If the id is not valid</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetCity(int id, bool includepointsOfInterest = false)
         {
             var city = await _cityInfoRepository.GetCityAsync(id, includepointsOfInterest);
