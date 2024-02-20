@@ -7,8 +7,8 @@ namespace CityInfo.API.Services
 {
     public class CityInfoRepository : ICityInfoRepository
     {
-        private readonly CityInfoContext _context;
-        public CityInfoRepository(CityInfoContext context)
+        private readonly ApplicationDbContext _context;
+        public CityInfoRepository(ApplicationDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
