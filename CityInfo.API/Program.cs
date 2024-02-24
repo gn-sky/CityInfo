@@ -40,9 +40,11 @@ builder.Services.AddSwaggerGen(setupAction =>
     });
 });
 
-builder.Services.AddDbContext<CityInfoContext>(
-    dbContextOptions => dbContextOptions.UseSqlite(
-        builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
+builder.Services.AddDbContext<CityInfoContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("CityInfoDBConnectionString")
+    )
+);
 
 builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
 
@@ -82,11 +84,8 @@ builder.Services.AddApiVersioning(setupAction =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

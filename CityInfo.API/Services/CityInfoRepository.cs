@@ -1,7 +1,6 @@
 ﻿using CityInfo.API.DbContexts;
 using CityInfo.API.Entities;
 using Microsoft.EntityFrameworkCore;
-using SQLitePCL;
 
 namespace CityInfo.API.Services
 {
