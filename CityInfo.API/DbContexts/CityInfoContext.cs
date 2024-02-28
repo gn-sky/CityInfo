@@ -5,8 +5,9 @@ namespace CityInfo.API.DbContexts
 {
     public class CityInfoContext : DbContext
     {
-        public DbSet<City> Cities { get; set; } = null!;
-        public DbSet<PointOfInterest> PointOfInterests { get; set; } = null!;
+        public DbSet<City> Cities { get; set; }
+        public DbSet<PointOfInterest> PointOfInterests { get; set; }
+        public DbSet<User> Users { get; set; }
         public CityInfoContext(DbContextOptions<CityInfoContext> options)
             : base(options)
         {
@@ -16,7 +17,7 @@ namespace CityInfo.API.DbContexts
         {
             modelBuilder.Entity<City>()
                 .HasData(                
-                new City("New YorkCity")
+                new City("New York City")
                 {
                     Id = 1,
                     Description = "The one with that big park.",
