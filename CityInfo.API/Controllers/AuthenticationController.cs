@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CityInfo.API.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,10 +13,11 @@ namespace CityInfo.API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly IUserRepository _userRepository;
         public class AuthenticationRequestBody
         {
-            public string? Username { get; set; }
-            public string? Password { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
         }
 
         private class CityInfoUser {
@@ -40,10 +42,12 @@ namespace CityInfo.API.Controllers
             }
         }
 
-        public AuthenticationController(IConfiguration configuration)
+        public AuthenticationController(IConfiguration configuration, IUserRepository userRepository)
         {
             _configuration = configuration ??
                 throw new ArgumentNullException(nameof(configuration));
+            _userRepository = userRepository ??
+                throw new ArgumentNullException(nameof(userRepository));
         }
 
 
@@ -82,18 +86,20 @@ namespace CityInfo.API.Controllers
             return Ok(tokenToReturn);
         }
 
-        private CityInfoUser ValidateUserCredentials(string? username, string? password)
+        private CityInfoUser? ValidateUserCredentials(string username, string password)
         {
-            //if (username == "jane.smith" && password == "Welcome1")
-            if (true)
+            var user = _userRepository.GetUser(username, password);
+
+            if (user != null)
             {
                 return new CityInfoUser(
-                                       1,
-                                        username ?? "",
-                                        "Kevin",
-                                        "Docks",
-                                        "Antwerp");
+                                       user.Id,
+                                        user.Name,
+                                        string.Empty,
+                                        string.Empty,
+                                        string.Empty);
             }
+            return null;
         }
     }
 }
